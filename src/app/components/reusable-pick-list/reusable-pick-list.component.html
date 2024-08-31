@@ -1,1 +1,24 @@
-<p>reusable-pick-list works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Available ITEMS</h5>
+            <div class="list-group">
+                <div class="list-group-item" *ngFor="let item of availableItems;let i=index" (click)="selectItems(item)"
+                    [ngClass]="{'active-item':getSelectedValues(item)}">
+                    {{item}}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <h5>Selected ITEMS</h5>
+            <div class="list-group">
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

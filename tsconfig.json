@@ -16,13 +16,10 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es6",
     "module": "es6",
     "useDefineForClassFields": false,
-    "lib": [
-      "es6",
-      "dom"
-    ]
+    "target": "es2016",  // Or "es2017", "es2018", etc.
+    "lib": ["es2016", "dom"],
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
