@@ -1,14 +1,14 @@
 <div class="container">
   <div class="row py-5">
-    <app-reusable-pick-list [options]="options"></app-reusable-pick-list>
+    <app-reusable-pick-list #pickListEl [options]="options"></app-reusable-pick-list>
   </div>
   
   <div class="row d-flex justify-content-center align-items-center">
     <div class="col-md-6">
-      <button class="btn btn-outline-danger ms-2">Save</button>
-      <button class="btn btn-outline-danger ms-2">Delete</button>
-      <button class="btn btn-outline-danger ms-2">Save All</button>
-      <button class="btn btn-outline-danger ms-2">Delete All</button>
+      <button class="btn btn-outline-danger ms-2" (click)="save()">Save</button>
+      <button class="btn btn-outline-danger ms-2" (click)="deleteSelected()">Delete</button>
+      <button class="btn btn-outline-danger ms-2" (click)="saveAll()">Save All</button>
+      <button class="btn btn-outline-danger ms-2" (click)="deleteAll()">Delete All</button>
     </div>
 
   </div>
