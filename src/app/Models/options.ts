@@ -3,3 +3,8 @@ export interface Ioptions {
     uniqueKey?:keyof any,
     showKey?:any
 }
+
+export interface Iitems{
+    id:number,
+    name:string
+}

@@ -28,6 +28,7 @@ export class ReusablePickListComponent implements OnInit {
     
       this.availableItems = this.availableItems.filter((el: any) => {
         const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
+      
         const index = this.defaultValues.findIndex(defaultItem => {
           const defaultItemKey = defaultItem[this.uniqueKey] ? defaultItem[this.uniqueKey] : defaultItem;
           return defaultItemKey === itemKey;

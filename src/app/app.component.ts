@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ReusablePickListComponent } from './components/reusable-pick-list/reusable-pick-list.component';
+import { Iitems } from './Models/options';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent implements OnInit {
 
   @ViewChild('pickListEl') pickListElRef !: ReusablePickListComponent;
 
-  availableItems: any[] = [
+  availableItems: Iitems[] = [
     { id: 1, name: 'permission 1' },
     { id: 2, name: 'permission 2' },
     { id: 3, name: 'permission 3' },
@@ -23,7 +24,7 @@ export class AppComponent implements OnInit {
   //   'permission 4', 'permission 5', 'permission 6', 'permission 7']
 
 
-  defaultValues: any[] = [
+  defaultValues: Iitems[] = [
     { id: 1, name: 'permission 1' },
     { id: 2, name: 'permission 2' }
   ]
