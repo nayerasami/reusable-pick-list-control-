@@ -234,11 +234,12 @@ export class ReusablePickListComponent implements OnInit {
 
   removeDuplicate(array: any[]) {
     const filteredArr = array.filter((el: any, index: number, self: any[]) => {
-      const elKey = el[this.uniqueKey] !== undefined ? el[this.uniqueKey] : el;
-      return self.findIndex((item: any) => {
-        const itemKey = item[this.uniqueKey] !== undefined ? item[this.uniqueKey] : item;
+      const elKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
+     const arrayElIndex= self.findIndex((item: any) => {
+        const itemKey = item[this.uniqueKey] ? item[this.uniqueKey] : item;
         return itemKey === elKey;
-      }) === index;
+      })
+      return arrayElIndex === index;
     });
 
     return filteredArr;
