@@ -101,7 +101,6 @@ export class ReusablePickListComponent implements OnInit {
   saveAll() {
     this.savedSelectedItems = [...this.availableItems, ...this.savedSelectedItems]
     this.originalSavedSelectedItems = [...this.savedSelectedItems];
-    console.log(this.savedSelectedItems, "save all")
     this.availableItems = []
     this.selectedItems = []
 
@@ -132,7 +131,6 @@ export class ReusablePickListComponent implements OnInit {
 
       this.availableItems = [...this.availableItems, ...itemsToAdd]
       this.selectedItems = [];
-      console.log(this.availableItems, "availableItems")
     }
 
   }
@@ -165,7 +163,6 @@ export class ReusablePickListComponent implements OnInit {
 
   genericSortAscending(itemsArr: any) {
     itemsArr.sort((a: any, b: any) => {
-      console.log(itemsArr, "sorting itemsARR")
       const firstItem = a[this.showKey] ? a[this.showKey].toLowerCase() : a;
       const secondItem = b[this.showKey] ? b[this.showKey].toLowerCase() : b;
       if (firstItem < secondItem) {
@@ -236,27 +233,16 @@ export class ReusablePickListComponent implements OnInit {
 
 
   removeDuplicate(array: any[]) {
-    if (!Array.isArray(array)) {
-      console.error('Expected an array but got:', array);
-      return [];
-    }
-
     const filteredArr = array.filter((el: any, index: number, self: any[]) => {
       const elKey = el[this.uniqueKey] !== undefined ? el[this.uniqueKey] : el;
-
       return self.findIndex((item: any) => {
         const itemKey = item[this.uniqueKey] !== undefined ? item[this.uniqueKey] : item;
         return itemKey === elKey;
       }) === index;
     });
 
-    console.log(filteredArr, "filteredArr");
     return filteredArr;
   }
-
-
-
-
 
 
 }
