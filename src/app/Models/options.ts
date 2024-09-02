@@ -1,7 +1,10 @@
 export interface Ioptions {
     availableItemsArr: any[],
     uniqueKey?:keyof any,
-    showKey?:any
+    showKey?:any,
+    isSearchable?:boolean,
+    isSortable?:boolean
+    
 }
 
 export interface Iitems{

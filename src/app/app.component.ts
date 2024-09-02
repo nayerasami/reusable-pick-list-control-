@@ -34,7 +34,9 @@ export class AppComponent implements OnInit {
     availableItemsArr: this.availableItems,
     defaultValuesArr: this.defaultValues,
     uniqueKey: 'id',
-    showKey: 'name'
+    showKey: 'name',
+    isSearchable:true,
+    isSortable:true,
   }
 
   ngOnInit(): void {

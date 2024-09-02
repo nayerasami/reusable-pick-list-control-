@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-reusable-pick-list',
@@ -16,20 +16,24 @@ export class ReusablePickListComponent implements OnInit {
   selectedSearchQuery: any;
   originalSavedSelectedItems: any[] = [];
   defaultValues: any[] = [];
-  //itemBeingDragged: any;
+
+  isSearchable: boolean = false;
+  isSortable: boolean = false;
 
   ngOnInit(): void {
     this.availableItems = this.options.availableItemsArr
     this.uniqueKey = this.options.uniqueKey || 'id'
     this.showKey = this.options.showKey || 'name'
     this.defaultValues = this.options.defaultValuesArr
-    if(this.defaultValues){
-      this.savedSelectedItems =[...this.defaultValues]
-       this.originalSavedSelectedItems=[...this.defaultValues]
-    
+    this.isSearchable = this.options.isSearchable;
+    this.isSortable = this.options.isSortable
+    if (this.defaultValues) {
+      this.savedSelectedItems = [...this.defaultValues]
+      this.originalSavedSelectedItems = [...this.defaultValues]
+
       this.availableItems = this.availableItems.filter((el: any) => {
         const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
-      
+
         const index = this.defaultValues.findIndex(defaultItem => {
           const defaultItemKey = defaultItem[this.uniqueKey] ? defaultItem[this.uniqueKey] : defaultItem;
           return defaultItemKey === itemKey;
@@ -68,17 +72,17 @@ export class ReusablePickListComponent implements OnInit {
 
   getSelectedValues(item: any): boolean {
     const itemKeyValue = typeof item === 'object' ? item[this.uniqueKey] : item;
-    return this.selectedItems.some((selectedItem: any) => {
+    const index = this.selectedItems.findIndex((selectedItem: any) => {
       const selectedItemKeyValue = typeof selectedItem === 'object' ? selectedItem[this.uniqueKey] : selectedItem;
       return selectedItemKeyValue === itemKeyValue;
     });
+    return index !== -1;
   }
 
 
 
 
   saveSelectedValues() {
-
     if (this.selectedItems.length > 0) {
       const addedItems = this.savedSelectedItems.filter((el: any) => {
         return !this.selectedItems.includes(el)
@@ -213,17 +217,29 @@ export class ReusablePickListComponent implements OnInit {
     this.genericSortDescending(this.savedSelectedItems)
   }
 
-  drop(event:CdkDragDrop<string[]>){
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-    }
-  }
+  drop(event: CdkDragDrop<any[]>) {
+    console.log(event.previousContainer, "event of previousContainer")
 
+    // if (event.previousContainer === event.container) {
+    //   console.log(event.container.data, "event data")
+    //   moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    // } else {
+    //   transferArrayItem(
+    //     event.previousContainer.data,
+    //     event.container.data,
+    //     event.previousIndex,
+    //     event.currentIndex,
+    //   );
+    // }
+
+
+    this.selectedItems.forEach(selectedEl => {
+      const index = this.availableItems.findIndex((item: any) => item[this.uniqueKey] ? item[this.uniqueKey] : item);
+      if (index > -1) {
+        this.availableItems.splice(index, 1);
+      }
+    });
+    this.savedSelectedItems.push(...this.selectedItems)
+    this.selectedItems = []
+  }
 }
