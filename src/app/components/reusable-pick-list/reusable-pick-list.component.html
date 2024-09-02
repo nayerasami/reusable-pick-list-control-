@@ -6,13 +6,13 @@
         <div class="my-3">
           <button
             class="btn btn-outline-dark sortBtn"
-            (click)="sortAvailableAscending()"
+            (click)="genericSortAscending(availableItems)            "
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
           <button
             class="btn btn-outline-dark sortBtn ms-2"
-            (click)="sortAvailableDescending()"
+            (click)="genericSortDescending(availableItems)"
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
@@ -41,7 +41,7 @@
           class="list-group-item"
           *ngFor="let item of availableItems; let i = index"
           (click)="selectItems(item)"
-          [ngClass]="{ 'active-item': getSelectedValues(item) }"
+          [ngClass]="{ 'active-item': isSelected(item) }"
           cdkDrag
         >
           {{ item[showKey] ? item[showKey] : item }}
@@ -55,13 +55,13 @@
         <div class="my-3" *ngIf="isSortable">
           <button
             class="btn btn-outline-dark sortBtn"
-            (click)="sortSavedAscending()"
+            (click)="genericSortAscending(savedSelectedItems)"
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
           <button
             class="btn btn-outline-dark sortBtn ms-2"
-            (click)="sortSavedDescending()"
+            (click)="genericSortDescending(savedSelectedItems)"
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
@@ -89,11 +89,30 @@
           class="list-group-item"
           *ngFor="let item of savedSelectedItems"
           (click)="selectItems(item)"
-          [ngClass]="{ 'active-item': getSelectedValues(item) }"
+          [ngClass]="{ 'active-item': isSelected(item) }"
         >
           {{ item[showKey] ? item[showKey] : item }}
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row d-flex justify-content-center align-items-center my-5">
+    <div class="col-md-6">
+      <button
+        class="btn btn-outline-danger ms-2"
+        (click)="saveSelectedValues()"
+      >
+        Save
+      </button>
+      <button class="btn btn-outline-danger ms-2" (click)="deleteSelected()">
+        Delete
+      </button>
+      <button class="btn btn-outline-danger ms-2" (click)="saveAll()">
+        Save All
+      </button>
+      <button class="btn btn-outline-danger ms-2" (click)="DeleteAll()">
+        Delete All
+      </button>
     </div>
   </div>
 </div>

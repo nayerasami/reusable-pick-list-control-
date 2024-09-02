@@ -28,40 +28,32 @@ export class AppComponent implements OnInit {
   //   'permission 4', 'permission 5', 'permission 6', 'permission 7']
 
 
-  defaultValues: Iitems[] = [
-    { id: 1, name: 'permission 1' },
-    //{ id: 2, name: 'permission 2' }
-  ]
+  // defaultValues: Iitems[] = [
+  //   { id: 1, name: 'permission 1' },
+  //   //{ id: 2, name: 'permission 2' }
+  // ]
 
+  defaultAdded: Iitems[] = [
+    { id: 1, name: 'permission 1' },
+    { id: 2, name: 'test 2' },
+  ]
 
   options: any = {
     availableItemsArr: this.availableItems,
-    defaultValuesArr: this.defaultValues,
+    // defaultValuesArr: this.defaultValues,
     uniqueKey: 'id',
     showKey: 'name',
     isSearchable: true,
     isSortable: true,
+    defaultAddedArr: this.defaultAdded
   }
 
   ngOnInit(): void {
 
   }
 
-
-  save() {
-    this.pickListElRef.saveSelectedValues()
-  }
-
-  saveAll() {
-    this.pickListElRef.saveAll()
-  }
-
-  deleteAll() {
-
-    this.pickListElRef.DeleteAll()
-  }
-  deleteSelected() {
-    this.pickListElRef.deleteSelected()
+  addDefaultItems() {
+    this.pickListElRef.addDefaultItems()
   }
 
 }

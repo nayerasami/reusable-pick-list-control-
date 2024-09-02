@@ -9,29 +9,35 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 export class ReusablePickListComponent implements OnInit {
   @Input() options: any;
   availableItems: any;
-  uniqueKey: any;
-  showKey: any;
   savedSelectedItems: any[] = [];
-  searchQuery: any;
-  selectedSearchQuery: any;
   originalSavedSelectedItems: any[] = [];
   defaultValues: any[] = [];
+
+  selectedItems: any[] = [];
+  defaultAdded: any[] = []
+
+  uniqueKey: any;
+  showKey: any;
+  searchQuery: any;
+  selectedSearchQuery: any;
 
   isSearchable: boolean = false;
   isSortable: boolean = false;
 
   ngOnInit(): void {
-    this.availableItems = this.options.availableItemsArr
-    this.uniqueKey = this.options.uniqueKey || 'id'
-    this.showKey = this.options.showKey || 'name'
-    this.defaultValues = this.options.defaultValuesArr
+    this.availableItems = this.options.availableItemsArr;
+    this.uniqueKey = this.options.uniqueKey || 'id';
+    this.showKey = this.options.showKey || 'name';
+    this.defaultValues = this.options.defaultValuesArr;
     this.isSearchable = this.options.isSearchable;
-    this.isSortable = this.options.isSortable
-    this.options.availableItemsArr = this.removeDuplicate(this.options.availableItemsArr)
-    this.availableItems = this.removeDuplicate(this.availableItems)
+    this.isSortable = this.options.isSortable;
+    this.options.availableItemsArr = this.removeDuplicate(this.options.availableItemsArr);
+    this.availableItems = this.removeDuplicate(this.availableItems);
+    this.defaultAdded = this.options.defaultAddedArr;
+
     if (this.defaultValues) {
-      this.savedSelectedItems = [...this.removeDuplicate(this.defaultValues)]
       this.originalSavedSelectedItems = [...this.removeDuplicate(this.defaultValues)]
+      this.savedSelectedItems = [...this.originalSavedSelectedItems]
 
       this.availableItems = this.availableItems.filter((el: any) => {
         const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
@@ -48,12 +54,7 @@ export class ReusablePickListComponent implements OnInit {
     }
   }
 
-
-
-  selectedItems: any[] = [];
-
   selectItems(item: any) {
-
     const value = item[this.uniqueKey] ? item[this.uniqueKey] : item
     const index = this.selectedItems.findIndex((selectedItem: any) => {
       const selectedValue = typeof selectedItem === 'object' ? selectedItem[this.uniqueKey] : selectedItem;
@@ -67,8 +68,7 @@ export class ReusablePickListComponent implements OnInit {
     }
   }
 
-
-  getSelectedValues(item: any): boolean {
+  isSelected(item: any): boolean {
     const itemKeyValue = typeof item === 'object' ? item[this.uniqueKey] : item;
     const index = this.selectedItems.findIndex((selectedItem: any) => {
       const selectedItemKeyValue = typeof selectedItem === 'object' ? selectedItem[this.uniqueKey] : selectedItem;
@@ -76,9 +76,6 @@ export class ReusablePickListComponent implements OnInit {
     });
     return index !== -1;
   }
-
-
-
 
   saveSelectedValues() {
     if (this.selectedItems.length > 0) {
@@ -93,28 +90,7 @@ export class ReusablePickListComponent implements OnInit {
       });
       this.selectedItems = []
     }
-
-
   }
-
-
-  saveAll() {
-    this.savedSelectedItems = [...this.availableItems, ...this.savedSelectedItems]
-    this.originalSavedSelectedItems = [...this.savedSelectedItems];
-    this.availableItems = []
-    this.selectedItems = []
-
-  }
-
-
-  DeleteAll() {
-    this.availableItems = [...this.availableItems, ...this.savedSelectedItems]
-    this.savedSelectedItems = []
-    this.originalSavedSelectedItems = []
-    this.selectedItems = []
-  }
-
-
 
   deleteSelected() {
     if (this.savedSelectedItems.length > 0) {
@@ -132,11 +108,21 @@ export class ReusablePickListComponent implements OnInit {
       this.availableItems = [...this.availableItems, ...itemsToAdd]
       this.selectedItems = [];
     }
-
   }
 
+  saveAll() {
+    this.savedSelectedItems = [...this.availableItems, ...this.savedSelectedItems]
+    this.originalSavedSelectedItems = [...this.savedSelectedItems];
+    this.availableItems = []
+    this.selectedItems = []
+  }
 
-
+  DeleteAll() {
+    this.availableItems = [...this.availableItems, ...this.savedSelectedItems]
+    this.savedSelectedItems = []
+    this.originalSavedSelectedItems = []
+    this.selectedItems = []
+  }
 
   searchValues(query: any, items: any, originalItems: any) {
     const lowerCaseQuery = query.toLowerCase().trim()
@@ -150,16 +136,13 @@ export class ReusablePickListComponent implements OnInit {
     }
   }
 
-
   searchInAvailableValues() {
     this.availableItems = this.searchValues(this.searchQuery, this.availableItems, this.options.availableItemsArr);
   }
 
-
   searchInSavedValues() {
     this.savedSelectedItems = this.searchValues(this.selectedSearchQuery, this.savedSelectedItems, this.originalSavedSelectedItems);
   }
-
 
   genericSortAscending(itemsArr: any) {
     itemsArr.sort((a: any, b: any) => {
@@ -191,21 +174,6 @@ export class ReusablePickListComponent implements OnInit {
 
   }
 
-  sortAvailableAscending() {
-    this.genericSortAscending(this.availableItems)
-  }
-
-  sortAvailableDescending() {
-    this.genericSortDescending(this.availableItems)
-  }
-
-  sortSavedAscending() {
-    this.genericSortAscending(this.savedSelectedItems)
-  }
-
-  sortSavedDescending() {
-    this.genericSortDescending(this.savedSelectedItems)
-  }
 
   drop(event: CdkDragDrop<any[]>) {
     if (this.selectedItems.length > 0) {
@@ -244,6 +212,22 @@ export class ReusablePickListComponent implements OnInit {
 
     return filteredArr;
   }
+
+  addDefaultItems() {
+    this.savedSelectedItems.push(...this.removeDuplicate(this.defaultAdded))
+    this.availableItems = this.availableItems.filter((el: any) => {
+      const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
+
+      const index = this.defaultAdded.findIndex(defaultItem => {
+        const defaultItemKey = defaultItem[this.uniqueKey] ? defaultItem[this.uniqueKey] : defaultItem;
+        return defaultItemKey === itemKey;
+      });
+
+      return index === -1;
+    });
+
+  }
+
 
 
 }

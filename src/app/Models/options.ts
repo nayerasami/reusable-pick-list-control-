@@ -3,7 +3,8 @@ export interface Ioptions {
     uniqueKey?:keyof any,
     showKey?:any,
     isSearchable?:boolean,
-    isSortable?:boolean
+    isSortable?:boolean,
+    defaultAddedArr?:boolean
     
 }
 
