@@ -31,14 +31,18 @@
 
       <div
         class="list-group"
-       
+        cdkDropList
+        #availableList="cdkDropList"
+        [cdkDropListData]="availableItems"
+        [cdkDropListConnectedTo]="[selectedList]"
+        (cdkDropListDropped)="drop($event)"
       >
         <div
           class="list-group-item"
           *ngFor="let item of availableItems; let i = index"
           (click)="selectItems(item)"
           [ngClass]="{ 'active-item': getSelectedValues(item) }"
-         
+          cdkDrag
         >
           {{ item[showKey] ? item[showKey] : item }}
         </div>
@@ -75,14 +79,17 @@
       </div>
       <div
         class="list-group"
-      
+        cdkDropList
+        #selectedList="cdkDropList"
+        [cdkDropListData]="savedSelectedItems"
+        [cdkDropListConnectedTo]="[availableList]"
+        (cdkDropListDropped)="drop($event)"
       >
         <div
           class="list-group-item"
           *ngFor="let item of savedSelectedItems"
           (click)="selectItems(item)"
           [ngClass]="{ 'active-item': getSelectedValues(item) }"
-        
         >
           {{ item[showKey] ? item[showKey] : item }}
         </div>

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-reusable-pick-list',
@@ -163,7 +164,6 @@ export class ReusablePickListComponent implements OnInit {
   genericSortAscending(itemsArr: any) {
     const sortedArray = itemsArr.sort((a: any, b: any) => {
       console.log(itemsArr, "sorting itemsARR")
-
       const firstItem = a[this.showKey] ? a[this.showKey].toLowerCase() : a;
       const secondItem = b[this.showKey] ? b[this.showKey].toLowerCase() : b;
       if (firstItem < secondItem) {
@@ -213,5 +213,17 @@ export class ReusablePickListComponent implements OnInit {
     this.genericSortDescending(this.savedSelectedItems)
   }
 
+  drop(event:CdkDragDrop<string[]>){
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+  }
 
 }
