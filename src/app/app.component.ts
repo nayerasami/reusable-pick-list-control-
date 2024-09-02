@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
     { id: 5, name: 'permission 5' },
     { id: 6, name: 'permission 6' },
     { id: 6, name: 'permission 6' },
-    { id: 6, name: 'permission 6' },
   ]
 
   // availableItems: any[] = ['permission 1', 'permission 2', 'permission 3',

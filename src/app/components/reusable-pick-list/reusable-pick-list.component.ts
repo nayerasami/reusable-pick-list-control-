@@ -191,19 +191,19 @@ export class ReusablePickListComponent implements OnInit {
 
   }
 
-  availableSortAscending() {
+  sortAvailableAscending() {
     this.genericSortAscending(this.availableItems)
   }
 
-  availableSortDescending() {
+  sortAvailableDescending() {
     this.genericSortDescending(this.availableItems)
   }
 
-  savedSortAscending() {
+  sortSavedAscending() {
     this.genericSortAscending(this.savedSelectedItems)
   }
 
-  savedSortDescending() {
+  sortSavedDescending() {
     this.genericSortDescending(this.savedSelectedItems)
   }
 
@@ -235,7 +235,7 @@ export class ReusablePickListComponent implements OnInit {
   removeDuplicate(array: any[]) {
     const filteredArr = array.filter((el: any, index: number, self: any[]) => {
       const elKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
-     const arrayElIndex= self.findIndex((item: any) => {
+      const arrayElIndex = self.findIndex((item: any) => {
         const itemKey = item[this.uniqueKey] ? item[this.uniqueKey] : item;
         return itemKey === elKey;
       })

@@ -6,13 +6,13 @@
         <div class="my-3">
           <button
             class="btn btn-outline-dark sortBtn"
-            (click)="availableSortAscending()"
+            (click)="sortAvailableAscending()"
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
           <button
             class="btn btn-outline-dark sortBtn ms-2"
-            (click)="availableSortDescending()"
+            (click)="sortAvailableDescending()"
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
@@ -55,13 +55,13 @@
         <div class="my-3" *ngIf="isSortable">
           <button
             class="btn btn-outline-dark sortBtn"
-            (click)="savedSortAscending()"
+            (click)="sortSavedAscending()"
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
           <button
             class="btn btn-outline-dark sortBtn ms-2"
-            (click)="savedSortDescending()"
+            (click)="sortSavedDescending()"
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
