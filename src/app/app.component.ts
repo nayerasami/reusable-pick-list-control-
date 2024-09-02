@@ -14,10 +14,15 @@ export class AppComponent implements OnInit {
 
   availableItems: Iitems[] = [
     { id: 1, name: 'permission 1' },
-    { id: 2, name: 'permission 2' },
-    { id: 3, name: 'permission 3' },
+    { id: 2, name: 'test 2' },
+    { id: 3, name: 'task 3' },
     { id: 4, name: 'permission 4' },
-    { id: 5, name: 'permission 5' }
+    { id: 5, name: 'permission 5' },
+    { id: 6, name: 'permission 6' },
+    { id: 5, name: 'permission 5' },
+    { id: 6, name: 'permission 6' },
+    { id: 6, name: 'permission 6' },
+    { id: 6, name: 'permission 6' },
   ]
 
   // availableItems: any[] = ['permission 1', 'permission 2', 'permission 3',
@@ -26,7 +31,7 @@ export class AppComponent implements OnInit {
 
   defaultValues: Iitems[] = [
     { id: 1, name: 'permission 1' },
-    { id: 2, name: 'permission 2' }
+    //{ id: 2, name: 'permission 2' }
   ]
 
 
@@ -35,8 +40,8 @@ export class AppComponent implements OnInit {
     defaultValuesArr: this.defaultValues,
     uniqueKey: 'id',
     showKey: 'name',
-    isSearchable:true,
-    isSortable:true,
+    isSearchable: true,
+    isSortable: true,
   }
 
   ngOnInit(): void {
@@ -59,4 +64,5 @@ export class AppComponent implements OnInit {
   deleteSelected() {
     this.pickListElRef.deleteSelected()
   }
+
 }

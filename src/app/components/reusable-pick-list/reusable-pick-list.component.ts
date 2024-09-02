@@ -27,9 +27,11 @@ export class ReusablePickListComponent implements OnInit {
     this.defaultValues = this.options.defaultValuesArr
     this.isSearchable = this.options.isSearchable;
     this.isSortable = this.options.isSortable
+    this.options.availableItemsArr = this.removeDuplicate(this.options.availableItemsArr)
+    this.availableItems = this.removeDuplicate(this.availableItems)
     if (this.defaultValues) {
-      this.savedSelectedItems = [...this.defaultValues]
-      this.originalSavedSelectedItems = [...this.defaultValues]
+      this.savedSelectedItems = [...this.removeDuplicate(this.defaultValues)]
+      this.originalSavedSelectedItems = [...this.removeDuplicate(this.defaultValues)]
 
       this.availableItems = this.availableItems.filter((el: any) => {
         const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
@@ -41,6 +43,8 @@ export class ReusablePickListComponent implements OnInit {
 
         return index === -1;
       });
+    } else {
+      this.originalSavedSelectedItems = [... this.savedSelectedItems]
     }
   }
 
@@ -52,21 +56,15 @@ export class ReusablePickListComponent implements OnInit {
 
     const value = item[this.uniqueKey] ? item[this.uniqueKey] : item
     const index = this.selectedItems.findIndex((selectedItem: any) => {
-      console.log(selectedItem[this.uniqueKey], "selectedItem[this.uniqueKey]")
       const selectedValue = typeof selectedItem === 'object' ? selectedItem[this.uniqueKey] : selectedItem;
-      console.log(selectedValue === item, "check")
       return selectedValue === value;
     })
-    console.log(index, "index of ")
     if (index == -1) {
       this.selectedItems.push(item);
-      console.log(this.selectedItems, "Selected items after addition");
     }
     else {
       this.selectedItems.splice(index, 1)
     }
-
-    console.log(this.selectedItems, "selectedITems")
   }
 
 
@@ -125,11 +123,13 @@ export class ReusablePickListComponent implements OnInit {
         return !this.selectedItems.includes(el)
       })
       this.originalSavedSelectedItems = [...this.savedSelectedItems]
+
       const itemsToAdd = this.selectedItems.filter((item: any) => {
         return !this.availableItems.some((availableItem: any) => {
           return (typeof availableItem === 'object' ? availableItem[this.uniqueKey] : availableItem) === (typeof item === 'object' ? item[this.uniqueKey] : item);
         });
       });
+
       this.availableItems = [...this.availableItems, ...itemsToAdd]
       this.selectedItems = [];
       console.log(this.availableItems, "availableItems")
@@ -145,12 +145,10 @@ export class ReusablePickListComponent implements OnInit {
     if (lowerCaseQuery == '') {
       return [...originalItems]
     } else {
-      if (items.length > 0) {
-        return items.filter((item: any) => {
-          const value = item[this.showKey] ? item[this.showKey] : item
-          return value.toString().toLowerCase().includes(lowerCaseQuery)
-        })
-      }
+      return items.filter((item: any) => {
+        const value = item[this.showKey] ? item[this.showKey] : item
+        return value.toString().toLowerCase().includes(lowerCaseQuery)
+      })
     }
   }
 
@@ -166,7 +164,7 @@ export class ReusablePickListComponent implements OnInit {
 
 
   genericSortAscending(itemsArr: any) {
-    const sortedArray = itemsArr.sort((a: any, b: any) => {
+    itemsArr.sort((a: any, b: any) => {
       console.log(itemsArr, "sorting itemsARR")
       const firstItem = a[this.showKey] ? a[this.showKey].toLowerCase() : a;
       const secondItem = b[this.showKey] ? b[this.showKey].toLowerCase() : b;
@@ -179,12 +177,10 @@ export class ReusablePickListComponent implements OnInit {
       return 0
 
     });
-    console.log(sortedArray, " sortedArray ")
   }
 
   genericSortDescending(itemsArr: any) {
-    const sortedArray = itemsArr.sort((a: any, b: any) => {
-      console.log(itemsArr, "sorting itemsARR")
+    itemsArr.sort((a: any, b: any) => {
       const firstItem = a[this.showKey] ? a[this.showKey].toLowerCase() : a;
       const secondItem = b[this.showKey] ? b[this.showKey].toLowerCase() : b;
       if (firstItem > secondItem) {
@@ -194,10 +190,7 @@ export class ReusablePickListComponent implements OnInit {
         return 1;
       }
       return 0
-
     });
-
-    console.log(sortedArray, " sortedArray ")
 
   }
 
@@ -218,28 +211,52 @@ export class ReusablePickListComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    console.log(event.previousContainer, "event of previousContainer")
+    if (this.selectedItems.length > 0) {
+      this.selectedItems.forEach(selectedEl => {
+        const index = this.availableItems.findIndex((item: any) => item[this.uniqueKey] ? item[this.uniqueKey] : item);
+        if (index > -1) {
+          this.availableItems.splice(index, 1);
+        }
+      });
+      this.savedSelectedItems.push(...this.selectedItems)
+      this.selectedItems = []
 
-    // if (event.previousContainer === event.container) {
-    //   console.log(event.container.data, "event data")
-    //   moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    // } else {
-    //   transferArrayItem(
-    //     event.previousContainer.data,
-    //     event.container.data,
-    //     event.previousIndex,
-    //     event.currentIndex,
-    //   );
-    // }
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+
+    }
 
 
-    this.selectedItems.forEach(selectedEl => {
-      const index = this.availableItems.findIndex((item: any) => item[this.uniqueKey] ? item[this.uniqueKey] : item);
-      if (index > -1) {
-        this.availableItems.splice(index, 1);
-      }
-    });
-    this.savedSelectedItems.push(...this.selectedItems)
-    this.selectedItems = []
   }
+
+
+  removeDuplicate(array: any[]) {
+    if (!Array.isArray(array)) {
+      console.error('Expected an array but got:', array);
+      return [];
+    }
+
+    const filteredArr = array.filter((el: any, index: number, self: any[]) => {
+      const elKey = el[this.uniqueKey] !== undefined ? el[this.uniqueKey] : el;
+
+      return self.findIndex((item: any) => {
+        const itemKey = item[this.uniqueKey] !== undefined ? item[this.uniqueKey] : item;
+        return itemKey === elKey;
+      }) === index;
+    });
+
+    console.log(filteredArr, "filteredArr");
+    return filteredArr;
+  }
+
+
+
+
+
+
 }
