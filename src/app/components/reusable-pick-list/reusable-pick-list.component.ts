@@ -36,7 +36,6 @@ export class ReusablePickListComponent implements OnInit {
     this.items = this.removeDuplicate(this.items);
     this.defaultAdded = this.options.defaultAddedArr;
     this.defaultDeleted = this.options.defaultDeleted
-    console.log(this.defaultDeleted, "deleted")
 
     if (this.defaultValues) {
       this.originalSavedSelectedItems = [...this.removeDuplicate(this.defaultValues)]
@@ -278,7 +277,7 @@ export class ReusablePickListComponent implements OnInit {
     if (this.defaultDeleted) {
 
       //remove the default deleted from the saved array
-      
+
       this.savedSelectedItems = this.savedSelectedItems.filter((el: any) => {
         const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
         const index = this.defaultDeleted.findIndex(defaultItem => {
