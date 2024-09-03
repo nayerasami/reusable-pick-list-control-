@@ -33,19 +33,26 @@ export class AppComponent implements OnInit {
   //   //{ id: 2, name: 'permission 2' }
   // ]
 
+  defaultDeleted: Iitems[] = [
+    { id: 5, name: 'permission 5' },
+    { id: 6, name: 'permission 6' },
+  ]
+
   defaultAdded: Iitems[] = [
     { id: 1, name: 'permission 1' },
     { id: 2, name: 'test 2' },
   ]
 
+
   options: any = {
-    availableItemsArr: this.availableItems,
+    itemsArr: this.availableItems,
     // defaultValuesArr: this.defaultValues,
     uniqueKey: 'id',
     showKey: 'name',
     isSearchable: true,
     isSortable: true,
-    defaultAddedArr: this.defaultAdded
+    defaultAddedArr: this.defaultAdded,
+    defaultDeleted:this.defaultDeleted
   }
 
   ngOnInit(): void {

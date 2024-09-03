@@ -6,13 +6,13 @@
         <div class="my-3">
           <button
             class="btn btn-outline-dark sortBtn"
-            (click)="genericSortAscending(availableItems)            "
+            (click)="genericSortAscending(items)            "
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
           <button
             class="btn btn-outline-dark sortBtn ms-2"
-            (click)="genericSortDescending(availableItems)"
+            (click)="genericSortDescending(items)"
           >
             <i class="bi bi-sort-alpha-up"></i>
           </button>
@@ -33,13 +33,13 @@
         class="list-group"
         cdkDropList
         #availableList="cdkDropList"
-        [cdkDropListData]="availableItems"
+        [cdkDropListData]="items"
         [cdkDropListConnectedTo]="[selectedList]"
         (cdkDropListDropped)="drop($event)"
       >
         <div
           class="list-group-item"
-          *ngFor="let item of availableItems; let i = index"
+          *ngFor="let item of items; let i = index"
           (click)="selectItems(item)"
           [ngClass]="{ 'active-item': isSelected(item) }"
           cdkDrag

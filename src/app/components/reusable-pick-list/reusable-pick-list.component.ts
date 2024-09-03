@@ -8,13 +8,14 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 })
 export class ReusablePickListComponent implements OnInit {
   @Input() options: any;
-  availableItems: any;
+  items: any;
   savedSelectedItems: any[] = [];
   originalSavedSelectedItems: any[] = [];
   defaultValues: any[] = [];
 
   selectedItems: any[] = [];
   defaultAdded: any[] = []
+  defaultDeleted: any[] = []
 
   uniqueKey: any;
   showKey: any;
@@ -25,21 +26,23 @@ export class ReusablePickListComponent implements OnInit {
   isSortable: boolean = false;
 
   ngOnInit(): void {
-    this.availableItems = this.options.availableItemsArr;
+    this.items = this.options.itemsArr;
     this.uniqueKey = this.options.uniqueKey || 'id';
     this.showKey = this.options.showKey || 'name';
     this.defaultValues = this.options.defaultValuesArr;
     this.isSearchable = this.options.isSearchable;
     this.isSortable = this.options.isSortable;
-    this.options.availableItemsArr = this.removeDuplicate(this.options.availableItemsArr);
-    this.availableItems = this.removeDuplicate(this.availableItems);
+    this.options.itemsArr = this.removeDuplicate(this.options.itemsArr);
+    this.items = this.removeDuplicate(this.items);
     this.defaultAdded = this.options.defaultAddedArr;
+    this.defaultDeleted = this.options.defaultDeleted
+    console.log(this.defaultDeleted, "deleted")
 
     if (this.defaultValues) {
       this.originalSavedSelectedItems = [...this.removeDuplicate(this.defaultValues)]
       this.savedSelectedItems = [...this.originalSavedSelectedItems]
 
-      this.availableItems = this.availableItems.filter((el: any) => {
+      this.items = this.items.filter((el: any) => {
         const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
 
         const index = this.defaultValues.findIndex(defaultItem => {
@@ -61,7 +64,7 @@ export class ReusablePickListComponent implements OnInit {
       return selectedValue === value;
     })
 
-    const isSelectingFromItems = this.availableItems.some((availableItem: any) => {
+    const isSelectingFromItems = this.items.some((availableItem: any) => {
       const availableItemKey = availableItem[this.uniqueKey] ? availableItem[this.uniqueKey] : availableItem;
       return availableItemKey === value;
     });
@@ -72,7 +75,7 @@ export class ReusablePickListComponent implements OnInit {
     })
 
     const isSelectingOnlyFromItems = this.selectedItems.every(selectedItem =>
-      this.availableItems.some((availableItem: any) => {
+      this.items.some((availableItem: any) => {
         const selectedItemKey = selectedItem[this.uniqueKey] ? selectedItem[this.uniqueKey] : selectedItem;
         const availableItemKey = availableItem[this.uniqueKey] ? availableItem[this.uniqueKey] : availableItem;
         return selectedItemKey === availableItemKey;
@@ -106,9 +109,6 @@ export class ReusablePickListComponent implements OnInit {
   }
 
 
-
-
-
   isSelected(item: any): boolean {
     const itemKeyValue = typeof item === 'object' ? item[this.uniqueKey] : item;
     const index = this.selectedItems.findIndex((selectedItem: any) => {
@@ -118,6 +118,7 @@ export class ReusablePickListComponent implements OnInit {
     return index !== -1;
   }
 
+
   saveSelectedValues() {
     if (this.selectedItems.length > 0) {
       const addedItems = this.savedSelectedItems.filter((el: any) => {
@@ -126,7 +127,7 @@ export class ReusablePickListComponent implements OnInit {
 
       this.savedSelectedItems = [...addedItems, ...this.selectedItems]
       this.originalSavedSelectedItems = [...this.savedSelectedItems];
-      this.availableItems = this.availableItems.filter((el: any) => {
+      this.items = this.items.filter((el: any) => {
         return !this.savedSelectedItems.includes(el);
       });
       this.selectedItems = []
@@ -141,25 +142,25 @@ export class ReusablePickListComponent implements OnInit {
       this.originalSavedSelectedItems = [...this.savedSelectedItems]
 
       const itemsToAdd = this.selectedItems.filter((item: any) => {
-        return !this.availableItems.some((availableItem: any) => {
+        return !this.items.some((availableItem: any) => {
           return (typeof availableItem === 'object' ? availableItem[this.uniqueKey] : availableItem) === (typeof item === 'object' ? item[this.uniqueKey] : item);
         });
       });
 
-      this.availableItems = [...this.availableItems, ...itemsToAdd]
+      this.items = [...this.items, ...itemsToAdd]
       this.selectedItems = [];
     }
   }
 
   saveAll() {
-    this.savedSelectedItems = [...this.availableItems, ...this.savedSelectedItems]
+    this.savedSelectedItems = [...this.items, ...this.savedSelectedItems]
     this.originalSavedSelectedItems = [...this.savedSelectedItems];
-    this.availableItems = []
+    this.items = []
     this.selectedItems = []
   }
 
   DeleteAll() {
-    this.availableItems = [...this.availableItems, ...this.savedSelectedItems]
+    this.items = [...this.items, ...this.savedSelectedItems]
     this.savedSelectedItems = []
     this.originalSavedSelectedItems = []
     this.selectedItems = []
@@ -178,7 +179,7 @@ export class ReusablePickListComponent implements OnInit {
   }
 
   searchInAvailableValues() {
-    this.availableItems = this.searchValues(this.searchQuery, this.availableItems, this.options.availableItemsArr);
+    this.items = this.searchValues(this.searchQuery, this.items, this.options.itemsArr);
   }
 
   searchInSavedValues() {
@@ -219,9 +220,9 @@ export class ReusablePickListComponent implements OnInit {
   drop(event: CdkDragDrop<any[]>) {
     if (this.selectedItems.length > 0) {
       this.selectedItems.forEach(selectedEl => {
-        const index = this.availableItems.findIndex((item: any) => item[this.uniqueKey] ? item[this.uniqueKey] : item);
+        const index = this.items.findIndex((item: any) => item[this.uniqueKey] ? item[this.uniqueKey] : item);
         if (index > -1) {
-          this.availableItems.splice(index, 1);
+          this.items.splice(index, 1);
         }
       });
       this.savedSelectedItems.push(...this.selectedItems)
@@ -255,9 +256,11 @@ export class ReusablePickListComponent implements OnInit {
   }
 
   addDefaultItems() {
-    this.savedSelectedItems.push(...this.removeDuplicate(this.defaultAdded))
-
-    this.availableItems = this.availableItems.filter((el: any) => {
+    this.savedSelectedItems = [
+      ...this.savedSelectedItems,
+      ...this.removeDuplicate(this.defaultAdded)
+    ];
+    this.items = this.items.filter((el: any) => {
       const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
       const index = this.defaultAdded.findIndex(defaultItem => {
         const defaultItemKey = defaultItem[this.uniqueKey] ? defaultItem[this.uniqueKey] : defaultItem;
@@ -267,19 +270,38 @@ export class ReusablePickListComponent implements OnInit {
     });
 
     this.savedSelectedItems = this.removeDuplicate(this.savedSelectedItems);
-    this.defaultAdded = []
   }
 
-  deleteDefault() {
 
-    this.savedSelectedItems = this.savedSelectedItems.filter((el: any) => {
-      const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
-      const index = this.defaultAdded.findIndex(defaultItem => {
-        const defaultItemKey = defaultItem[this.uniqueKey] ? defaultItem[this.uniqueKey] : defaultItem;
-        return defaultItemKey === itemKey;
+
+  deleteDefault() {
+    if (this.defaultDeleted) {
+
+      //remove the default deleted from the saved array
+      
+      this.savedSelectedItems = this.savedSelectedItems.filter((el: any) => {
+        const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
+        const index = this.defaultDeleted.findIndex(defaultItem => {
+          const defaultItemKey = defaultItem[this.uniqueKey] ? defaultItem[this.uniqueKey] : defaultItem;
+          return defaultItemKey === itemKey;
+        });
+        return index === -1;
       });
-      return index === -1;
-    });
+
+      //filter the items to add back to the items array 
+
+      const itemsToAddBack = this.defaultDeleted.filter((item: any) => {
+        const itemKey = item[this.uniqueKey] ? item[this.uniqueKey] : item;
+        return !this.items.some((existingItem: any) => {
+          const existingItemKey = existingItem[this.uniqueKey] ? existingItem[this.uniqueKey] : existingItem;
+          return existingItemKey === itemKey;
+        });
+      });
+
+      this.items = [...this.items, ...itemsToAddBack];
+
+    }
+
 
   }
 

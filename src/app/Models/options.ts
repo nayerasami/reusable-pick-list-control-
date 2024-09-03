@@ -1,10 +1,11 @@
 export interface Ioptions {
-    availableItemsArr: any[],
+    itemsArr: any[],
     uniqueKey?:keyof any,
     showKey?:any,
     isSearchable?:boolean,
     isSortable?:boolean,
-    defaultAddedArr?:boolean
+    defaultAddedArr?:any,
+    defaultDelete?:any
     
 }
 
