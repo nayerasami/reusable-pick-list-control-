@@ -56,4 +56,7 @@ export class AppComponent implements OnInit {
     this.pickListElRef.addDefaultItems()
   }
 
+  deleteDefaultItems() {
+    this.pickListElRef.deleteDefault()
+  }
 }

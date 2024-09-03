@@ -50,7 +50,7 @@ export class ReusablePickListComponent implements OnInit {
         return index === -1;
       });
     } else {
-      this.originalSavedSelectedItems = [... this.savedSelectedItems]
+      this.originalSavedSelectedItems = [...this.savedSelectedItems]
     }
   }
 
@@ -60,13 +60,54 @@ export class ReusablePickListComponent implements OnInit {
       const selectedValue = typeof selectedItem === 'object' ? selectedItem[this.uniqueKey] : selectedItem;
       return selectedValue === value;
     })
-    if (index == -1) {
-      this.selectedItems.push(item);
+
+    const isSelectingFromItems = this.availableItems.some((availableItem: any) => {
+      const availableItemKey = availableItem[this.uniqueKey] ? availableItem[this.uniqueKey] : availableItem;
+      return availableItemKey === value;
+    });
+
+    const isSelectingFromSavedItems = this.savedSelectedItems.some((savedItem: any) => {
+      const savedItemKey = savedItem[this.uniqueKey] ? savedItem[this.uniqueKey] : savedItem;
+      return savedItemKey === value;
+    })
+
+    const isSelectingOnlyFromItems = this.selectedItems.every(selectedItem =>
+      this.availableItems.some((availableItem: any) => {
+        const selectedItemKey = selectedItem[this.uniqueKey] ? selectedItem[this.uniqueKey] : selectedItem;
+        const availableItemKey = availableItem[this.uniqueKey] ? availableItem[this.uniqueKey] : availableItem;
+        return selectedItemKey === availableItemKey;
+      }))
+
+    const isSelectingOnlyFormSaved = this.selectedItems.every(selectedItem =>
+      this.savedSelectedItems.some((savedItem: any) => {
+        const selectedItemKey = selectedItem[this.uniqueKey] ? selectedItem[this.uniqueKey] : selectedItem;
+        const savedItemKey = savedItem[this.uniqueKey] ? savedItem[this.uniqueKey] : savedItem;
+        return selectedItemKey === savedItemKey;
+      }))
+
+
+    if (isSelectingFromItems && isSelectingOnlyFromItems) {
+      if (index === -1) {
+        this.selectedItems.push(item);
+      } else {
+        this.selectedItems.splice(index, 1);
+      }
+    } else if (isSelectingFromSavedItems && isSelectingOnlyFormSaved) {
+      if (index === -1) {
+        this.selectedItems.push(item);
+      } else {
+        this.selectedItems.splice(index, 1);
+      }
+    } else {
+      this.selectedItems = [item];
     }
-    else {
-      this.selectedItems.splice(index, 1)
-    }
+
+
   }
+
+
+
+
 
   isSelected(item: any): boolean {
     const itemKeyValue = typeof item === 'object' ? item[this.uniqueKey] : item;
@@ -215,19 +256,31 @@ export class ReusablePickListComponent implements OnInit {
 
   addDefaultItems() {
     this.savedSelectedItems.push(...this.removeDuplicate(this.defaultAdded))
+
     this.availableItems = this.availableItems.filter((el: any) => {
       const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
-
       const index = this.defaultAdded.findIndex(defaultItem => {
         const defaultItemKey = defaultItem[this.uniqueKey] ? defaultItem[this.uniqueKey] : defaultItem;
         return defaultItemKey === itemKey;
       });
+      return index === -1;
+    });
 
+    this.savedSelectedItems = this.removeDuplicate(this.savedSelectedItems);
+    this.defaultAdded = []
+  }
+
+  deleteDefault() {
+
+    this.savedSelectedItems = this.savedSelectedItems.filter((el: any) => {
+      const itemKey = el[this.uniqueKey] ? el[this.uniqueKey] : el;
+      const index = this.defaultAdded.findIndex(defaultItem => {
+        const defaultItemKey = defaultItem[this.uniqueKey] ? defaultItem[this.uniqueKey] : defaultItem;
+        return defaultItemKey === itemKey;
+      });
       return index === -1;
     });
 
   }
-
-
 
 }
