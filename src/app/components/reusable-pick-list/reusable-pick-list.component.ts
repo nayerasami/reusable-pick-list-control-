@@ -123,7 +123,7 @@ export class ReusablePickListComponent implements OnInit {
 
   saveSelectedValues() {
     if (this.selectedItems.length > 0) {
-      this.hasError=false;
+
       const addedItems = this.savedSelectedItems.filter((el: any) => {
         return !this.selectedItems.includes(el)
       })
