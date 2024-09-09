@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -8,6 +8,9 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 })
 export class ReusablePickListComponent implements OnInit {
   @Input() options: any;
+  @Output() myEvent = new EventEmitter()
+  hasError:boolean=false;
+  errorMsg:string='';
   items: any;
   savedSelectedItems: any[] = [];
   originalSavedSelectedItems: any[] = [];
@@ -126,10 +129,14 @@ export class ReusablePickListComponent implements OnInit {
 
       this.savedSelectedItems = [...addedItems, ...this.selectedItems]
       this.originalSavedSelectedItems = [...this.savedSelectedItems];
+      this.myEvent.emit(this.originalSavedSelectedItems)
       this.items = this.items.filter((el: any) => {
         return !this.savedSelectedItems.includes(el);
       });
       this.selectedItems = []
+    }else{
+      this.hasError=true
+      this.errorMsg=this.options.validators.function(this.selectedItems)
     }
   }
 
@@ -139,6 +146,7 @@ export class ReusablePickListComponent implements OnInit {
         return !this.selectedItems.includes(el)
       })
       this.originalSavedSelectedItems = [...this.savedSelectedItems]
+      this.myEvent.emit(this.originalSavedSelectedItems)
 
       const itemsToAdd = this.selectedItems.filter((item: any) => {
         return !this.items.some((availableItem: any) => {
@@ -154,6 +162,8 @@ export class ReusablePickListComponent implements OnInit {
   saveAll() {
     this.savedSelectedItems = [...this.items, ...this.savedSelectedItems]
     this.originalSavedSelectedItems = [...this.savedSelectedItems];
+    this.myEvent.emit(this.originalSavedSelectedItems)
+
     this.items = []
     this.selectedItems = []
   }
@@ -162,6 +172,7 @@ export class ReusablePickListComponent implements OnInit {
     this.items = [...this.items, ...this.savedSelectedItems]
     this.savedSelectedItems = []
     this.originalSavedSelectedItems = []
+    this.myEvent.emit(this.originalSavedSelectedItems)
     this.selectedItems = []
   }
 

@@ -1,8 +1,12 @@
 <div class="container">
   <div class="row py-5">
-    <app-reusable-pick-list #pickListEl [options]="options"></app-reusable-pick-list>
+    <app-reusable-pick-list
+    (myEvent)="getPickedItems($event)"
+     #pickListEl 
+     [options]="options"></app-reusable-pick-list>
   </div>
-  
+  <button class="btn btn-danger mx-3" (click)="save()"> save </button>
+
   <button class="btn btn-danger" (click)="addDefaultItems()">Add items</button>
   <button class="btn btn-danger mx-3" (click)="deleteDefaultItems()">delete items</button>
 </div>

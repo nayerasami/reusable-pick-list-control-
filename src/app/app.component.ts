@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ReusablePickListComponent } from './components/reusable-pick-list/reusable-pick-list.component';
-import { Iitems } from './Models/options';
+import { Iitems, IpickListOptions } from './Models/options';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +9,9 @@ import { Iitems } from './Models/options';
 })
 export class AppComponent implements OnInit {
   title = 'task-five';
-
   @ViewChild('pickListEl') pickListElRef !: ReusablePickListComponent;
 
+  pickedData: any;
   availableItems: Iitems[] = [
     { id: 1, name: 'permission 1' },
     { id: 2, name: 'test 2' },
@@ -44,20 +44,35 @@ export class AppComponent implements OnInit {
   ]
 
 
-  options: any = {
+  options: IpickListOptions = {
     itemsArr: this.availableItems,
     // defaultValuesArr: this.defaultValues,
     uniqueKey: 'id',
     showKey: 'name',
     isSearchable: true,
     isSortable: true,
-    defaultAddedArr: this.defaultAdded,
-    defaultDeleted:this.defaultDeleted
+    // defaultAddedArr: this.defaultAdded,
+    // defaultDeleted:this.defaultDeleted,
+    validators: {
+      function: (array: any): any => {
+        if (!array || array.length === 0) {
+          return 'user must select at least one permission';
+        } else {
+          return undefined;
+        }
+
+      }
+    }
   }
 
   ngOnInit(): void {
 
   }
+  getPickedItems(event: any) {
+    this.pickedData = event;
+  }
+
+
 
   addDefaultItems() {
     this.pickListElRef.addDefaultItems()
@@ -65,5 +80,8 @@ export class AppComponent implements OnInit {
 
   deleteDefaultItems() {
     this.pickListElRef.deleteDefault()
+  }
+  save(){
+    this.pickListElRef.saveSelectedValues()
   }
 }

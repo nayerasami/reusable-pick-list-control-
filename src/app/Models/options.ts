@@ -1,15 +1,21 @@
-export interface Ioptions {
-    itemsArr: any[],
+export interface IpickListOptions {
+    itemsArr: IpickListItems[],
     uniqueKey?:keyof any,
     showKey?:any,
     isSearchable?:boolean,
     isSortable?:boolean,
     defaultAddedArr?:any,
-    defaultDelete?:any
+    defaultDeleted?:any,
+    defaultValuesArr?:any,
+    validators?:any
     
 }
 
-export interface Iitems{
+export interface IpickListItems{
     id:number,
     name:string
+}
+export interface Iitems{
+   id: number, 
+   name:string
 }
