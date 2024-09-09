@@ -123,6 +123,7 @@ export class ReusablePickListComponent implements OnInit {
 
   saveSelectedValues() {
     if (this.selectedItems.length > 0) {
+      this.hasError=false;
       const addedItems = this.savedSelectedItems.filter((el: any) => {
         return !this.selectedItems.includes(el)
       })
@@ -245,8 +246,15 @@ export class ReusablePickListComponent implements OnInit {
       event.container.data,
       event.previousIndex,
       event.currentIndex,
-    );
+    ); 
     this.selectedItems = []
+
+    if (this.savedSelectedItems.length == 0) {
+      this.hasError = true
+      this.errorMsg = this.options.validators.function(this.selectedItems)
+    }else{
+      this.hasError=false;
+    }
     //}
 
 
