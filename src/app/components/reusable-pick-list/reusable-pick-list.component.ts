@@ -9,8 +9,8 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 export class ReusablePickListComponent implements OnInit {
   @Input() options: any;
   @Output() myEvent = new EventEmitter()
-  hasError:boolean=false;
-  errorMsg:string='';
+  hasError: boolean = false;
+  errorMsg: string = '';
   items: any;
   savedSelectedItems: any[] = [];
   originalSavedSelectedItems: any[] = [];
@@ -134,9 +134,9 @@ export class ReusablePickListComponent implements OnInit {
         return !this.savedSelectedItems.includes(el);
       });
       this.selectedItems = []
-    }else{
-      this.hasError=true
-      this.errorMsg=this.options.validators.function(this.selectedItems)
+    } else {
+      this.hasError = true
+      this.errorMsg = this.options.validators.function(this.selectedItems)
     }
   }
 
@@ -228,25 +228,26 @@ export class ReusablePickListComponent implements OnInit {
 
 
   drop(event: CdkDragDrop<any[]>) {
-    if (this.selectedItems.length > 0) {
-      this.selectedItems.forEach(selectedEl => {
-        const index = this.items.findIndex((item: any) => item[this.uniqueKey] ? item[this.uniqueKey] : item);
-        if (index > -1) {
-          this.items.splice(index, 1);
-        }
-      });
-      this.savedSelectedItems.push(...this.selectedItems)
-      this.selectedItems = []
+    // if (this.selectedItems.length > 0) {
+    //   this.selectedItems.forEach(selectedEl => {
+    //     const index = this.items.findIndex((item: any) => item[this.uniqueKey] ? item[this.uniqueKey] : item);
+    //     if (index > -1) {
+    //       this.items.splice(index, 1);
+    //     }
+    //   });
+    //   console.log(this.selectedItems ,"picklist selected items ")
+    //   this.savedSelectedItems.push(...this.selectedItems)
+    //   this.selectedItems = []
 
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-
-    }
+    // } else {
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex,
+    );
+    this.selectedItems = []
+    //}
 
 
   }

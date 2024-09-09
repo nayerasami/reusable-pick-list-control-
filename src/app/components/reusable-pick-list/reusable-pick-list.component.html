@@ -28,6 +28,7 @@
           />
         </div>
       </div>
+  
 
       <div
         class="list-group"
@@ -90,6 +91,7 @@
           *ngFor="let item of savedSelectedItems"
           (click)="selectItems(item)"
           [ngClass]="{ 'active-item': isSelected(item) }"
+          cdkDrag
         >
           {{ item[showKey] ? item[showKey] : item }}
         </div>
